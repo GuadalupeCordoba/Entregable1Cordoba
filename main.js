@@ -1,44 +1,42 @@
-let nombreUsuario = prompt("Por favor, introduce tu nombre:");
-let correoUsuario = prompt("Por favor, introduce tu correo electrónico:");
-    console.log("Hola, " + nombreUsuario + "! Tu correo electrónico es " + correoUsuario + ".");
 
-    alert ("Bienvenido/a Basic-Ropa Sport. Ya puedes empezar a comprar")
 
-const db = {
-    methods: {
-        find: (id) => {
-            return db.items.find((item) => item.id === id);
-        },
-        remove: (items) => {
-            items.forEach((item) => {
-                const product = db.methods.find(item.id);
-                product.cantidad = product.cantidad - item.cantidad;
-            });
-
-            console.log(db);
-        },
+const items = [
+    {
+        id: 0,
+        titulo: "Remera Blanca",
+        precio: 100,
+        cantidad: 4,
     },
-    items: [
-        {
-            id: 0,
-            titulo: "Remera Blanca",
-            precio: 100,
-            cantidad: 4,
-        },
-        {
-            id: 1,
-            titulo: "Remera Verde",
-            precio: 100,
-            cantidad: 20,
-        },
-        {
-            id: 2,
-            titulo: "Remera mangas de color",
-            precio: 150,
-            cantidad: 80,
-        },
-    ],
+    {
+        id: 1,
+        titulo: "Remera Verde",
+        precio: 100,
+        cantidad: 20,
+    },
+    {
+        id: 2,
+        titulo: "Remera mangas de color",
+        precio: 150,
+        cantidad: 80,
+    },
+];
+
+const methods = {
+    find: (id) => {
+        return items.find((item) => item.id === id);
+    },
+    remove: (itemsToRemove) => {
+        itemsToRemove.forEach((itemToRemove) => {
+            const product = methods.find(itemToRemove.id);
+            product.cantidad = product.cantidad - itemToRemove.cantidad;
+        });
+
+        console.log({ items, methods });
+    },
 };
+
+const db = { items, methods };
+
 
 const comprasCarrito = {
     items: [],
@@ -52,11 +50,11 @@ const comprasCarrito = {
                     alert("Está agotado");
                 }
             } else {
-                comprasCarrito.items.push({ id, cantidad});
+                comprasCarrito.items.push({ id, cantidad });
             }
         },
-        
-        remove: (id, cantidad ) => {
+
+        remove: (id, cantidad) => {
             const cartItem = comprasCarrito.methods.get(id);
 
             if (cartItem.cantidad - 1 > 0) {
@@ -116,7 +114,8 @@ function renderAlmacen() {
                 comprasCarrito.methods.add(id, 1);
                 console.log(db, comprasCarrito);
                 rendercomprasCarrito();
-            } else {w
+            } else {
+                w
                 alert("Ya no hay existencia de ese producto");
             }
         });
@@ -195,3 +194,49 @@ function numberToCurrency(n) {
     }).format(n);
 }
 
+//formulario
+
+const formulario = document.getElementById("formulario");
+const tusCompras = document.getElementById("compras");
+const comprasContainer = document.getElementById("comprasContainer");  
+
+const compras = [];
+
+formulario.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const nombre = document.getElementById("nombre");
+    const email = document.getElementById("email");
+
+    if (
+        String(nombre.value).trim() === "" ||
+        String(email.value).trim() === ""
+    ) {
+        alert("Todos los campos son obligatorios");
+        return;
+    }
+
+    const compra = {  
+        nombre: nombre.value,
+        email: email.value,
+    };
+
+    compras.push(compra);  
+    const comprasElement = generarCompra(compra);  -
+    comprasContainer.appendChild(comprasElement);
+
+    formulario.reset();
+});
+
+function generarCompra(compra) { 
+    const div = document.createElement("div");
+
+    div.innerHTML = `
+    <h3>${compra.nombre}</h3>
+    <p>${compra.email}</p>
+    `;
+
+    div.className = "card";
+
+    return div;
+}
